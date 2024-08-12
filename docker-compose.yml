@@ -1,0 +1,30 @@
+version: '3.4'
+
+networks:
+  sharednetwork: # Custom network for internal service communication
+
+services:
+  sqlserverdb:
+    container_name: SqlServerContainer
+    image: mcr.microsoft.com/mssql/server:latest
+    networks:
+      - sharednetwork
+    ports:
+      - "8002:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=admin@123
+
+  puppy_project:
+    build:
+      context: .
+      dockerfile: Puppy_Project/Dockerfile
+    networks:
+      - sharednetwork
+    depends_on:
+      - sqlserverdb
+    ports:
+      - "8001:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserverdb;Database=YourDatabaseName;User Id=sa;Password=admin@123;TrustServerCertificate=True;
