@@ -26,6 +26,11 @@ namespace Puppy_Project.Controllers
         }
 
 
+        [HttpGet("test")]
+        public async Task<IActionResult> ExecuteTest()
+        {
+            return Ok("This is the test result");
+        }
 
         [HttpGet(Name="GetUsers")]
         [Authorize(Roles = "admin")]
