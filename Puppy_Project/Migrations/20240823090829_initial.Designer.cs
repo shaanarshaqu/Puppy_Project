@@ -12,8 +12,8 @@ using Puppy_Project.Dbcontext;
 namespace Puppy_Project.Migrations
 {
     [DbContext(typeof(PuppyDb))]
-    [Migration("20240822071609_puppy")]
-    partial class puppy
+    [Migration("20240823090829_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
