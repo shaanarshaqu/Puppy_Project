@@ -14,6 +14,9 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=admin@123
+    volumes:
+      - mssql_data:/var/opt/mssql  # Persistent storage for SQL Server data
+      - ./init-db:/docker-entrypoint-initdb.d/ # Load data on startup
 
   puppy_project:
     build:
@@ -28,3 +31,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserverdb;Database=puppyDb;User Id=sa;Password=admin@123;TrustServerCertificate=True;
+
+volumes:
+  mssql_data:
