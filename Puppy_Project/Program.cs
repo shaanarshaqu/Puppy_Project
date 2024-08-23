@@ -15,28 +15,21 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(AutoMaper));
-/*builder.Services.AddSingleton<PuppyDb>();
-*/
-builder.Services.AddDbContext<PuppyDb>(option => { option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); });
-builder.Services.AddScoped<IUsersService,UsersService>();
-builder.Services.AddScoped<ICategoryService,CategoryService>();
-builder.Services.AddScoped<IProductsService,ProductsService>();
-builder.Services.AddScoped<ICartService,CartService>();
-builder.Services.AddScoped<IOrderService,OrderService>();
-builder.Services.AddScoped<IWishListService,WishListService>();
+builder.Services.AddDbContext<PuppyDb>(option =>
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductsService, ProductsService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IWishListService, WishListService>();
 
-builder.Services.AddControllers();
-
-
-
-//-------------------------Authorization & Token------------------------------
+// Configure JWT Authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -48,20 +41,15 @@ builder.Services.AddAuthentication(options =>
     {
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey
-        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateLifetime = false,
         ValidateIssuerSigningKey = true
     };
 });
-builder.Services.AddAuthorization();
-//---------------------------------------------------------------------------
 
-
-
-//--------------------React------------------------------
+// Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactPolicy", builder =>
@@ -71,10 +59,6 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
-//-------------------------------------------------------
-
-builder.Services.AddAuthorization();
-
 
 var app = builder.Build();
 
@@ -85,20 +69,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-//---------React----------------------------------
 app.UseCors("ReactPolicy");
-//-----------------------------------------------
 app.UseStaticFiles();
-
-
-//---------------------Authorization-------------------------
 app.UseAuthentication();
 app.UseAuthorization();
-//-----------------------------------------------------------
-
-
-
 app.MapControllers();
 
 app.Run();
