@@ -1,14 +1,14 @@
 version: '3.4'
 
 networks:
-  sharednetwork: 
+  puppy_project_sharednetwork: 
 
 services:
   sqlserverdb:
     container_name: SqlServerContainer
     image: mcr.microsoft.com/mssql/server:latest
     networks:
-      - sharednetwork
+      - puppy_project_sharednetwork
     ports:
       - "1433:1433"
     environment:
@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Puppy_Project/Dockerfile
     networks:
-      - sharednetwork
+      - puppy_project_sharednetwork
     depends_on:
       - sqlserverdb
     ports:
