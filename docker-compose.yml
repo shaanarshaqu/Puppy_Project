@@ -2,6 +2,7 @@ version: '3.4'
 
 networks:
   puppy_project_sharednetwork: 
+    name: puppy_project_sharednetwork
 
 services:
   sqlserverdb:
